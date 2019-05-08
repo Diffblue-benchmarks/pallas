@@ -1,6 +1,15 @@
 cbmcArguments:
   # Do not generate coverage comments on generated tests.
   java-generate-no-comments: true
+
+units:
+  # Target Coverage: Unknown %
+  - target:
+    - dir: pallas-common/target/classes
+      file: com/vip/pallas/utils/IPUtils.class
+      sourceDir: pallas-common/src/main/java
+      sourceFile: com/vip/pallas/utils/IPUtils.java
+
 phases:
   -
   #Phase 0 PRETTY AND SIMPLE - Simple models, quick cover, pretty Tests, Do Not Test Private Method Directly
