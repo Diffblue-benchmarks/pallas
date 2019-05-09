@@ -154,7 +154,8 @@ phases:
 units:
   # Target Coverage: Unknown %
   - target:
-    - dir: pallas-core/target/classes
-      file: com/vip/pallas/utils/DateUtil.class
-      sourceDir: pallas-core/src/main/java
-      sourceFile: com/vip/pallas/utils/DateUtil.java
+    - dir: pallas-common/target/classes
+      file: com/vip/pallas/utils/IPUtils.class
+      sourceDir: pallas-common/src/main/java
+      sourceFile: com/vip/pallas/utils/IPUtils.java
+
