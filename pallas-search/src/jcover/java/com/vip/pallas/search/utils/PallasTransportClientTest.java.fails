@@ -1,0 +1,25 @@
+package com.vip.pallas.search.utils;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsSame.sameInstance;
+
+import org.elasticsearch.client.transport.TransportClient;
+import org.junit.Test;
+
+/**
+ * Unit tests for com.vip.pallas.search.utils.PallasTransportClient
+ *
+ * @author Diffblue Cover
+ */
+
+public class PallasTransportClientTest {
+
+	@Test
+	public void factory() throws NumberFormatException, java.net.UnknownHostException {
+		PallasTransportClient pallasTransportClient =
+			 new PallasTransportClient("John Smith", "280 Broadway");
+		TransportClient transportClient = ElasticRestClient.buildNative(",");
+		pallasTransportClient.setTransportClient(transportClient);
+		assertThat(pallasTransportClient.getTransportClient(), sameInstance(transportClient));
+	}
+}

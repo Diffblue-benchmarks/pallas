@@ -1,0 +1,94 @@
+package com.vip.pallas.search.filter.error;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import com.vip.pallas.search.exception.PallasTimeoutException;
+import com.vip.pallas.search.filter.common.SessionContext;
+import com.vip.pallas.search.netty.http.NettyPallasRequest;
+
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.FullHttpRequest;
+
+import java.net.SocketAddress;
+
+import org.junit.Test;
+
+/**
+ * Unit tests for com.vip.pallas.search.filter.error.ErrorFilter
+ *
+ * @author Diffblue Cover
+ */
+
+public class ErrorFilterTest {
+
+	@Test
+	public void name() {
+		assertThat(new ErrorFilter().name(), is("PALLAS_FILTER_ERRORFILTER"));
+	}
+
+	@Test
+	public void processThrowable1() {
+
+		// arrange
+		SessionContext sessionContext = new SessionContext();
+		sessionContext.setHttpCode(520);
+		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
+		Channel channel = mock(Channel.class);
+		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
+
+		// act
+		ErrorFilter.processThrowable(sessionContext, new PallasTimeoutException());
+
+		// assert
+		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
+		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
+	}
+
+	@Test
+	public void processThrowable2() {
+
+		// arrange
+		SessionContext sessionContext = new SessionContext();
+		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
+		SocketAddress socketAddress1 = mock(SocketAddress.class);
+		SocketAddress socketAddress2 = mock(SocketAddress.class);
+		Channel channel = mock(Channel.class);
+		when(channel.remoteAddress())
+			.thenReturn(socketAddress1)
+			.thenReturn(socketAddress2);
+		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
+
+		// act
+		ErrorFilter.processThrowable(sessionContext, new PallasTimeoutException());
+
+		// assert
+		assertThat(sessionContext.getHttpCode(), is(500));
+		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
+		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
+	}
+
+	@Test
+	public void processThrowable3() {
+
+		// arrange
+		SessionContext sessionContext = new SessionContext();
+		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
+		Channel channel = mock(Channel.class);
+		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
+
+		// act
+		ErrorFilter.processThrowable(sessionContext, new PallasTimeoutException());
+
+		// assert
+		assertThat(sessionContext.getHttpCode(), is(500));
+		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
+		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
+		assertThat(sessionContext.getResponseBody().isDirect(), is(true));
+		assertThat(sessionContext.getResponseBody().isReadOnly(), is(false));
+		assertThat(sessionContext.getResponseBody().isReadable(), is(true));
+		assertThat(sessionContext.getResponseBody().isWritable(), is(true));
+	}
+}

@@ -1,0 +1,84 @@
+package com.vip.pallas.search.monitor;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.LinkedHashMap;
+
+import org.junit.Test;
+
+/**
+ * Unit tests for com.vip.pallas.search.monitor.ServerWatch
+ *
+ * @author Diffblue Cover
+ */
+
+public class ServerWatchTest {
+
+	@Test
+	public void getMemoryUsageAtStartTime() throws java.net.UnknownHostException {
+		ServerWatch serverWatch = new ServerWatch();
+		assertThat(serverWatch.getMemoryUsageAtStartTime(), is("init = 262144000(256000K) used = 43775472(42749K) committed = 251658240(245760K) max = 3724541952(3637248K)"));
+		assertThat((Long) serverWatch.getVmStats().get("timestamp"), is(1_598_395_761_123L));
+	}
+
+	@Test
+	public void buildAllInfo() throws java.net.UnknownHostException {
+
+		// arrange
+		ServerWatch serverWatch = new ServerWatch();
+
+		// act
+		JSONObject result = serverWatch.buildAllInfo();
+
+		// assert
+		assertThat((String) result.get("Host"), is("thomas-Linux"));
+		assertThat((String) result.get("IP"), is("127.0.1.1"));
+		assertThat((String) result.get("Up Time"), is("00:00:00"));
+		// pojo String
+		assertThat((Long) ((JSONObject) result.get("cgroup")).get("cpuAcctUsageNanos"), is(26_580_416_466_429L));
+		assertThat((Integer) ((JSONObject) result.get("cgroup")).get("cpuCfsPeriodMicros"), is(100_000));
+		assertThat((Integer) ((JSONObject) result.get("cgroup")).get("cpuCfsQuotaMicros"), is(-1));
+		// pojo String
+		// pojo JSONObject
+		assertThat((Boolean) ((JSONObject) result.get("cgroup")).get("fragment"), is(true));
+		assertThat((Integer) ((JSONObject) result.get("classes")).get("loadedClassCount"), is(1_461));
+		assertThat((Integer) ((JSONObject) result.get("classes")).get("totalLoadedClassCount"), is(1_461));
+		assertThat((Integer) ((JSONObject) result.get("classes")).get("unloadedClassCount"), is(0));
+		assertThat((Integer) result.get("configuredInitialHeapSize"), is(262_144_000));
+		assertThat((Long) result.get("configuredMaxHeapSize"), is(4_190_109_696L));
+		assertThat((Boolean) ((JSONObject) result.get("cpu")).get("fragment"), is(true));
+		// pojo JSONArray
+		assertThat((Integer) ((JSONObject) result.get("cpu")).get("percent"), is(3));
+		assertThat((Boolean) result.get("fragment"), is(true));
+		// pojo LinkedHashMap<?, ?>
+		// pojo LinkedHashMap<?, ?>
+		// pojo LinkedHashMap<?, ?>
+		// pojo LinkedHashMap<?, ?>
+		// pojo JSONArray
+		// pojo JSONObject
+		// pojo JSONObject
+		// pojo JSONObject
+		assertThat((Integer) ((JSONObject) result.get("mem")).get("heapUsedPercent"), is(1));
+		// pojo JSONObject
+		// pojo JSONObject
+		assertThat((Integer) result.get("pid"), is(4_734));
+		assertThat((Long) result.get("startTime"), is(1_598_395_760_675L));
+		assertThat((Boolean) ((JSONObject) result.get("swap")).get("fragment"), is(true));
+		// pojo JSONObject
+		// pojo JSONObject
+		// pojo JSONObject
+		assertThat((Integer) ((JSONObject) result.get("threads")).get("count"), is(5));
+		assertThat((Integer) ((JSONObject) result.get("threads")).get("peakCount"), is(5));
+		assertThat((Long) result.get("timestamp"), is(1_598_395_761_081L));
+		assertThat((Integer) ((JSONObject) result.get("uptime")).get("minutes"), is(0));
+		assertThat((String) result.get("version"), is("1.8.0_265"));
+		assertThat((String) result.get("vmName"), is("OpenJDK 64-Bit Server VM"));
+		assertThat((String) result.get("vmVendor"), is("Private Build"));
+		assertThat((String) result.get("vmVersion"), is("25.265-b01"));
+		assertThat((Long) serverWatch.getVmStats().get("timestamp"), is(1_598_395_761_096L));
+	}
+}
