@@ -180,7 +180,7 @@ public class AsyncCallTest {
 		groupList2.add(shardGroup2);
 		pallasRequest.setShardGroupList(groupList2);
 		pallasRequest.setTargetGroupId(1L);
-		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).retryMaybe(), is(-1_598_462_691_329L));
+		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).retryMaybe(), is(-1_598_482_426_504L));
 	}
 
 	@Test
