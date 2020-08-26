@@ -52,7 +52,6 @@ public class TimeoutRetryControllerTest {
 	public void addRequest() {
 		CloseableHttpAsyncClient httpClient = mock(CloseableHttpAsyncClient.class);
 		SessionContext sessionContext = new SessionContext();
-		sessionContext.setBodySend(false);
 		Channel inBoundChannel = mock(Channel.class);
 		sessionContext.setInBoundChannel(inBoundChannel);
 		MonitorAccessLog monitorAccessLog = new MonitorAccessLog();

@@ -127,13 +127,6 @@ public class ConcurrentHashMapV8Test {
 	}
 
 	@Test
-	public void removeReturnsNull() {
-		HashMap<String, String> m = new HashMap<String, String>();
-		m.put("foo", "foo");
-		assertThat(new ConcurrentHashMapV8<String, String>(m).remove(new Object()), is(nullValue()));
-	}
-
-	@Test
 	public void clear1() {
 		new ConcurrentHashMapV8<String, String>().clear();
 	}

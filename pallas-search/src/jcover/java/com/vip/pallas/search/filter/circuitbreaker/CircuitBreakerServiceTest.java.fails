@@ -25,48 +25,27 @@ public class CircuitBreakerServiceTest {
 
 	@Test
 	public void increaseServiceRequestCounterIdIsBar() {
-		CircuitBreakerService.getInstance().increaseServiceRequestCounter("bar");
+		CircuitBreakerPolicy x5 = new CircuitBreakerPolicy();
+		x5.setSleepWindow(1);
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(x5)).increaseServiceRequestCounter("bar");
 	}
 
 	@Test
 	public void handleFailedRequestCounterIdIsBar() {
-		CircuitBreakerService.getInstance().handleFailedRequestCounter("bar");
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy())).handleFailedRequestCounter("bar");
 	}
 
 	@Test
 	public void moveOpenCircuitBreakerServerToHalfOpen() {
-		CircuitBreakerService.getInstance().moveOpenCircuitBreakerServerToHalfOpen("1234");
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy())).moveOpenCircuitBreakerServerToHalfOpen("1234");
 	}
 
 	@Test
-	public void increaseRequestCounterAndGet1() {
+	public void increaseRequestCounterAndGetIdIsBar() {
 
 		// arrange
 		CircuitBreakerService circuitBreakerService =
-			 CircuitBreakerService.getInstance();
-		CircuitBreakerPolicy circuitBreakerPolicy = new CircuitBreakerPolicy();
-		circuitBreakerPolicy.setErrorPercentage(1);
-		circuitBreakerPolicy.setInterval(1);
-		circuitBreakerPolicy.setRecoverySampleVolume(1);
-		circuitBreakerPolicy.setRequestVolumeThreshold(1);
-		circuitBreakerPolicy.setSleepWindow(1);
-
-		// act
-		CircuitBreakerCounter result =
-			 circuitBreakerService.increaseRequestCounterAndGet("bar", circuitBreakerPolicy);
-
-		// assert
-		assertThat(result.getCircuitBreakerInterval(), is(5L));
-		assertThat(result.getId(), is("bar"));
-		assertThat(circuitBreakerService.getGroupInvokeCounterMap().get("bar"), sameInstance(result));
-	}
-
-	@Test
-	public void increaseRequestCounterAndGet2() {
-
-		// arrange
-		CircuitBreakerService circuitBreakerService =
-			 CircuitBreakerService.getInstance();
+			 new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy()));
 		CircuitBreakerPolicy circuitBreakerPolicy = new CircuitBreakerPolicy();
 		circuitBreakerPolicy.setInterval(1);
 
@@ -82,20 +61,11 @@ public class CircuitBreakerServiceTest {
 
 	@Test
 	public void reset() {
-
-		// arrange
-		CircuitBreakerService circuitBreakerService =
-			 CircuitBreakerService.getInstance();
-
-		// act
-		circuitBreakerService.reset();
-
-		// assert
-		assertThat(circuitBreakerService.getGroupInvokeCounterMap().isEmpty(), is(true));
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy())).reset();
 	}
 
 	@Test
 	public void clear() {
-		CircuitBreakerService.getInstance().clear("1234");
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy())).clear("1234");
 	}
 }
