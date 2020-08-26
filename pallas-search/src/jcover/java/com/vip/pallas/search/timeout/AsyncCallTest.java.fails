@@ -157,19 +157,30 @@ public class AsyncCallTest {
 		pallasRequest.setRouteReplicaFirst(false);
 		pallasRequest.setScrollContinue(false);
 		pallasRequest.setScrollFirst(false);
-		ArrayList<String> ipAndPortList = new ArrayList<String>();
-		ipAndPortList.add("foo");
-		ShardGroup shardGroup = new ShardGroup("foo", ipAndPortList, "Acme");
-		shardGroup.setId("1234");
-		shardGroup.setIndexName("Acme");
-		shardGroup.setPreferNodes("foo");
-		ArrayList<String> serverList = new ArrayList<String>();
-		serverList.add("foo=bar");
-		shardGroup.setServerList(serverList);
-		pallasRequest.setShardGroup(shardGroup);
-		pallasRequest.setShardGroupList(new ArrayList<ShardGroup>());
+		ArrayList<String> ipAndPortList1 = new ArrayList<String>();
+		ipAndPortList1.add("foo");
+		ShardGroup shardGroup1 = new ShardGroup("foo", ipAndPortList1, "Acme");
+		shardGroup1.setId("1234");
+		shardGroup1.setIndexName("Acme");
+		shardGroup1.setPreferNodes("foo");
+		ArrayList<String> serverList1 = new ArrayList<String>();
+		serverList1.add("foo=bar");
+		shardGroup1.setServerList(serverList1);
+		pallasRequest.setShardGroup(shardGroup1);
+		ArrayList<ShardGroup> groupList2 = new ArrayList<ShardGroup>();
+		ArrayList<String> ipAndPortList2 = new ArrayList<String>();
+		ipAndPortList2.add("Smith");
+		ShardGroup shardGroup2 = new ShardGroup("Smith", ipAndPortList2, "Smith");
+		shardGroup2.setId("1234");
+		shardGroup2.setIndexName("Acme");
+		shardGroup2.setPreferNodes("foo");
+		ArrayList<String> serverList2 = new ArrayList<String>();
+		serverList2.add("foo=bar");
+		shardGroup2.setServerList(serverList2);
+		groupList2.add(shardGroup2);
+		pallasRequest.setShardGroupList(groupList2);
 		pallasRequest.setTargetGroupId(1L);
-		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).retryMaybe(), is(-1_598_451_166_955L));
+		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).retryMaybe(), is(-1_598_455_917_214L));
 	}
 
 	@Test

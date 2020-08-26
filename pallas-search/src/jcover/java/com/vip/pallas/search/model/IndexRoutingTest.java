@@ -38,6 +38,14 @@ public class IndexRoutingTest {
 		routingCondition.setEnable(false);
 		routingCondition.setName("director");
 		routingCondition.setPreference("hello");
+		ArrayList<IndexRouting.ConditionTarget> targetGroups =
+			 new ArrayList<IndexRouting.ConditionTarget>();
+		IndexRouting.ConditionTarget conditionTarget =
+			 new IndexRouting.ConditionTarget();
+		conditionTarget.setId(1L);
+		conditionTarget.setWeight(1);
+		targetGroups.add(conditionTarget);
+		routingCondition.setTargetGroups(targetGroups);
 		conditionList.add(routingCondition);
 		indexRouting.setConditionList(conditionList);
 		Date createTime = new SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
@@ -85,6 +93,15 @@ public class IndexRoutingTest {
 			 new ArrayList<IndexRoutingTargetGroup>();
 		IndexRoutingTargetGroup indexRoutingTargetGroup =
 			 new IndexRoutingTargetGroup();
+		ArrayList<IndexRoutingTargetGroup.ClusterInfo> clusterInfoList =
+			 new ArrayList<IndexRoutingTargetGroup.ClusterInfo>();
+		IndexRoutingTargetGroup.ClusterInfo clusterInfo =
+			 new IndexRoutingTargetGroup.ClusterInfo();
+		clusterInfo.setAddress("280 Broadway");
+		clusterInfo.setCluster("John Smith");
+		clusterInfo.setName("John Smith");
+		clusterInfoList.add(clusterInfo);
+		indexRoutingTargetGroup.setClusterInfoList(clusterInfoList);
 		indexRoutingTargetGroup.setClusterLevel(1);
 		indexRoutingTargetGroup.setClustersInfo("hello");
 		indexRoutingTargetGroup.setCreateTime(new SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31"));
@@ -92,7 +109,30 @@ public class IndexRoutingTest {
 		indexRoutingTargetGroup.setIndexId(1L);
 		indexRoutingTargetGroup.setIndexName("Acme");
 		indexRoutingTargetGroup.setName("Acme");
+		ArrayList<IndexRoutingTargetGroup.NodeInfo> nodeInfoList =
+			 new ArrayList<IndexRoutingTargetGroup.NodeInfo>();
+		IndexRoutingTargetGroup.NodeInfo nodeInfo =
+			 new IndexRoutingTargetGroup.NodeInfo();
+		nodeInfo.setAddress("280 Broadway");
+		nodeInfo.setCluster("John Smith");
+		nodeInfo.setName("Acme");
+		nodeInfo.setState(1);
+		nodeInfo.setWeight(1);
+		nodeInfoList.add(nodeInfo);
+		indexRoutingTargetGroup.setNodeInfoList(nodeInfoList);
 		indexRoutingTargetGroup.setNodesInfo("hello");
+		ArrayList<ShardGroup> shardGroupList = new ArrayList<ShardGroup>();
+		ArrayList<String> ipAndPortList = new ArrayList<String>();
+		ipAndPortList.add("Smith");
+		ShardGroup shardGroup = new ShardGroup("Smith", ipAndPortList, "Smith");
+		shardGroup.setId("1234");
+		shardGroup.setIndexName("Acme");
+		shardGroup.setPreferNodes("foo");
+		ArrayList<String> serverList = new ArrayList<String>();
+		serverList.add("foo=bar");
+		shardGroup.setServerList(serverList);
+		shardGroupList.add(shardGroup);
+		indexRoutingTargetGroup.setShardGroupList(shardGroupList);
 		indexRoutingTargetGroup.setState(1);
 		indexRoutingTargetGroup.setType("BASIC");
 		indexRoutingTargetGroup.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31"));
@@ -134,7 +174,15 @@ public class IndexRoutingTest {
 		routingCondition.setConditions(conditions);
 		routingCondition.setName("director");
 		routingCondition.setPreference("hello");
+		ArrayList<IndexRouting.ConditionTarget> targetGroups =
+			 new ArrayList<IndexRouting.ConditionTarget>();
+		IndexRouting.ConditionTarget conditionTarget =
+			 new IndexRouting.ConditionTarget();
+		conditionTarget.setId(1L);
+		conditionTarget.setWeight(1);
+		targetGroups.add(conditionTarget);
+		routingCondition.setTargetGroups(targetGroups);
 		list.add(routingCondition);
-		assertThat(IndexRouting.toXContent(list), is("[{\"name\":\"director\",\"conditionRelation\":\"1\",\"conditions\":[{\"paramType\":\"BASIC\",\"paramName\":\"name\",\"paramValue\":\"data\",\"exprOp\":\"DE\"}],\"preference\":\"hello\",\"targetGroups\":null,\"enable\":false}]"));
+		assertThat(IndexRouting.toXContent(list), is("[{\"name\":\"director\",\"conditionRelation\":\"1\",\"conditions\":[{\"paramType\":\"BASIC\",\"paramName\":\"name\",\"paramValue\":\"data\",\"exprOp\":\"DE\"}],\"preference\":\"hello\",\"targetGroups\":[{\"id\":1,\"weight\":1}],\"enable\":false}]"));
 	}
 }

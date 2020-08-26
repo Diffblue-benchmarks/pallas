@@ -60,7 +60,7 @@ public class FlowRecordConfigTest {
 		dataSource.setPort("OX13QD");
 		dataSource.setTableName("Acme");
 		dataSource.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31"));
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		dataSourceList.add(dataSource);
 		index.setDataSourceList(dataSourceList);
 		index.setDescription("some text");

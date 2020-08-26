@@ -34,7 +34,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is(nullValue()));
 		assertThat(dataSource.getDescription(), is("some text"));
@@ -45,7 +45,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is("OX13QD"));
 		assertThat(dataSource.getTableName(), is("Acme"));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is("Acme"));
 		assertThat(dataSource.getDescription(), is(nullValue()));
@@ -76,7 +76,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is("OX13QD"));
 		assertThat(dataSource.getTableName(), is("Acme"));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is("Acme"));
 		assertThat(dataSource.getDescription(), is("some text"));
@@ -107,7 +107,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is("OX13QD"));
 		assertThat(dataSource.getTableName(), is("Acme"));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test
@@ -127,7 +127,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is("Acme"));
 		assertThat(dataSource.getDescription(), is("some text"));
@@ -138,7 +138,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is("OX13QD"));
 		assertThat(dataSource.getTableName(), is("Acme"));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test
@@ -158,7 +158,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is("Acme"));
 		assertThat(dataSource.getDescription(), is("some text"));
@@ -169,7 +169,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is("OX13QD"));
 		assertThat(dataSource.getTableName(), is("Acme"));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test
@@ -189,7 +189,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is("Acme"));
 		assertThat(dataSource.getDescription(), is("some text"));
@@ -200,7 +200,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is(nullValue()));
 		assertThat(dataSource.getTableName(), is("Acme"));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test
@@ -220,7 +220,7 @@ public class DataSourceTest {
 		Date updateTime =
 			 new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2010-12-31");
 		dataSource.setUpdateTime(updateTime);
-		dataSource.setUsername("something");
+		dataSource.setUsername("root");
 		assertThat(dataSource.getCreateTime(), sameInstance(createTime));
 		assertThat(dataSource.getDbname(), is("Acme"));
 		assertThat(dataSource.getDescription(), is("some text"));
@@ -231,7 +231,7 @@ public class DataSourceTest {
 		assertThat(dataSource.getPort(), is("OX13QD"));
 		assertThat(dataSource.getTableName(), is(nullValue()));
 		assertThat(dataSource.getUpdateTime(), sameInstance(updateTime));
-		assertThat(dataSource.getUsername(), is("something"));
+		assertThat(dataSource.getUsername(), is("root"));
 	}
 
 	@Test

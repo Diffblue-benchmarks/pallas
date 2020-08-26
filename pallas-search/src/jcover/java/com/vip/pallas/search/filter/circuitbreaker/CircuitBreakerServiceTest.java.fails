@@ -26,18 +26,29 @@ public class CircuitBreakerServiceTest {
 	@Test
 	public void increaseServiceRequestCounterIdIsBar() {
 		CircuitBreakerPolicy x5 = new CircuitBreakerPolicy();
+		x5.setRequestVolumeThreshold(1);
 		x5.setSleepWindow(1);
 		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(x5)).increaseServiceRequestCounter("bar");
 	}
 
 	@Test
 	public void handleFailedRequestCounterIdIsBar() {
-		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy())).handleFailedRequestCounter("bar");
+		CircuitBreakerPolicy x5 = new CircuitBreakerPolicy();
+		x5.setInterval(1);
+		x5.setRecoverySampleVolume(1);
+		x5.setRequestVolumeThreshold(1);
+		x5.setSleepWindow(1);
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(x5)).handleFailedRequestCounter("bar");
 	}
 
 	@Test
 	public void moveOpenCircuitBreakerServerToHalfOpen() {
-		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(new CircuitBreakerPolicy())).moveOpenCircuitBreakerServerToHalfOpen("1234");
+		CircuitBreakerPolicy x5 = new CircuitBreakerPolicy();
+		x5.setInterval(1);
+		x5.setRecoverySampleVolume(1);
+		x5.setRequestVolumeThreshold(1);
+		x5.setSleepWindow(1);
+		new CircuitBreakerService(CircuitBreakerService.getInstance().new 1(x5)).moveOpenCircuitBreakerServerToHalfOpen("1234");
 	}
 
 	@Test
