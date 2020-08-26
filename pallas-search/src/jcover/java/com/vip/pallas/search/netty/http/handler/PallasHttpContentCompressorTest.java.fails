@@ -51,7 +51,7 @@ public class PallasHttpContentCompressorTest {
 
 		// assert
 		assertThat(out.size(), is(2));
-		assertThat(((HttpObject.384590634) out.get(1)).getDecoderResult(), sameInstance(decoderResult));
+		assertThat(((HttpObject.2129195226) out.get(1)).getDecoderResult(), sameInstance(decoderResult));
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class PallasHttpContentCompressorTest {
 
 		// assert
 		assertThat(out.size(), is(2));
-		assertThat(((HttpObject.384590634) out.get(1)).getDecoderResult(), sameInstance(decoderResult));
+		assertThat(((HttpObject.2129195226) out.get(1)).getDecoderResult(), sameInstance(decoderResult));
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class PallasHttpContentCompressorTest {
 
 		// assert
 		assertThat(out.size(), is(1));
-		assertThat(((HttpObject.384590634) out.get(0)).getDecoderResult(), sameInstance(decoderResult));
+		assertThat(((HttpObject.2129195226) out.get(0)).getDecoderResult(), sameInstance(decoderResult));
 	}
 
 	@Test
