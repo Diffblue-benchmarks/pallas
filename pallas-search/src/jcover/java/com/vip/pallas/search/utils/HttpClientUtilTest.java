@@ -3,13 +3,9 @@ package com.vip.pallas.search.utils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
 
@@ -136,13 +132,5 @@ public class HttpClientUtilTest {
 		assertThat(result.getConfig(), is(nullValue()));
 		assertThat(result.getMethod(), is("TRACE"));
 		assertThat(result.getURI().toString(), is("/some/path.html"));
-	}
-
-	@Test
-	public void moveByteIntoHeapReturnsEmpty() {
-		FullHttpRequest request = mock(FullHttpRequest.class);
-		when(request.content())
-			.thenReturn(Unpooled.directBuffer());
-		assertArrayEquals(new byte[] { }, HttpClientUtil.moveByteIntoHeap(request));
 	}
 }

@@ -58,24 +58,6 @@ public class AsyncCallTest {
 	@Test
 	public void setDoneReturnsTrue() {
 		CloseableHttpAsyncClient httpClient = mock(CloseableHttpAsyncClient.class);
-		HttpContext httpContext = mock(HttpContext.class);
-		FullHttpRequest httpRequest2 = mock(FullHttpRequest.class);
-		Channel channel2 = mock(Channel.class);
-		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(new RestResponseHeaderFilter()), new SessionContext(), new DefaultFullHttpRequest(new HttpVersion("HTTP/1.1", 1, 1, false), new HttpMethod("GET"), "/some/path.html"), httpContext, new NettyPallasRequest(httpRequest2, channel2)).setDone(), is(true));
-	}
-
-	@Test
-	public void isDoneReturnsFalse() {
-		CloseableHttpAsyncClient httpClient = mock(CloseableHttpAsyncClient.class);
-		HttpContext httpContext = mock(HttpContext.class);
-		FullHttpRequest httpRequest2 = mock(FullHttpRequest.class);
-		Channel channel2 = mock(Channel.class);
-		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(new RestResponseHeaderFilter()), new SessionContext(), new DefaultFullHttpRequest(new HttpVersion("HTTP/1.1", 1, 1, false), new HttpMethod("GET"), "/some/path.html"), httpContext, new NettyPallasRequest(httpRequest2, channel2)).isDone(), is(false));
-	}
-
-	@Test
-	public void retryMaybe() {
-		CloseableHttpAsyncClient httpClient = mock(CloseableHttpAsyncClient.class);
 		AbstractFilter filter = new RestResponseHeaderFilter();
 		filter.setValid(false);
 		SessionContext sessionContext = new SessionContext();
@@ -104,7 +86,28 @@ public class AsyncCallTest {
 		request.setRouteReplicaFirst(false);
 		request.setScrollContinue(false);
 		request.setScrollFirst(false);
-		request.setShardGroupList(new ArrayList<ShardGroup>());
+		ArrayList<String> ipAndPortList1 = new ArrayList<String>();
+		ipAndPortList1.add("foo");
+		ShardGroup shardGroup1 = new ShardGroup("foo", ipAndPortList1, "Acme");
+		shardGroup1.setId("1234");
+		shardGroup1.setIndexName("Acme");
+		shardGroup1.setPreferNodes("foo");
+		ArrayList<String> serverList1 = new ArrayList<String>();
+		serverList1.add("foo=bar");
+		shardGroup1.setServerList(serverList1);
+		request.setShardGroup(shardGroup1);
+		ArrayList<ShardGroup> groupList1 = new ArrayList<ShardGroup>();
+		ArrayList<String> ipAndPortList2 = new ArrayList<String>();
+		ipAndPortList2.add("Smith");
+		ShardGroup shardGroup2 = new ShardGroup("Smith", ipAndPortList2, "Smith");
+		shardGroup2.setId("1234");
+		shardGroup2.setIndexName("Acme");
+		shardGroup2.setPreferNodes("foo");
+		ArrayList<String> serverList2 = new ArrayList<String>();
+		serverList2.add("foo=bar");
+		shardGroup2.setServerList(serverList2);
+		groupList1.add(shardGroup2);
+		request.setShardGroupList(groupList1);
 		request.setTargetGroupId(1L);
 		sessionContext.setRequest(request);
 		sessionContext.setRequestCallBack("/some/path.html");
@@ -157,6 +160,72 @@ public class AsyncCallTest {
 		pallasRequest.setRouteReplicaFirst(false);
 		pallasRequest.setScrollContinue(false);
 		pallasRequest.setScrollFirst(false);
+		ArrayList<String> ipAndPortList3 = new ArrayList<String>();
+		ipAndPortList3.add("foo");
+		ShardGroup shardGroup3 = new ShardGroup("foo", ipAndPortList3, "Acme");
+		shardGroup3.setId("1234");
+		shardGroup3.setIndexName("Acme");
+		shardGroup3.setPreferNodes("foo");
+		ArrayList<String> serverList3 = new ArrayList<String>();
+		serverList3.add("foo=bar");
+		shardGroup3.setServerList(serverList3);
+		pallasRequest.setShardGroup(shardGroup3);
+		ArrayList<ShardGroup> groupList2 = new ArrayList<ShardGroup>();
+		ArrayList<String> ipAndPortList4 = new ArrayList<String>();
+		ipAndPortList4.add("Smith");
+		ShardGroup shardGroup4 = new ShardGroup("Smith", ipAndPortList4, "Smith");
+		shardGroup4.setId("1234");
+		shardGroup4.setIndexName("Acme");
+		shardGroup4.setPreferNodes("foo");
+		ArrayList<String> serverList4 = new ArrayList<String>();
+		serverList4.add("foo=bar");
+		shardGroup4.setServerList(serverList4);
+		groupList2.add(shardGroup4);
+		pallasRequest.setShardGroupList(groupList2);
+		pallasRequest.setTargetGroupId(1L);
+		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).setDone(), is(true));
+	}
+
+	@Test
+	public void isDoneReturnsFalse() {
+		CloseableHttpAsyncClient httpClient = mock(CloseableHttpAsyncClient.class);
+		HttpContext httpContext = mock(HttpContext.class);
+		FullHttpRequest httpRequest2 = mock(FullHttpRequest.class);
+		Channel channel2 = mock(Channel.class);
+		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(new RestResponseHeaderFilter()), new SessionContext(), new DefaultFullHttpRequest(new HttpVersion("HTTP/1.1", 1, 1, false), new HttpMethod("GET"), "/some/path.html"), httpContext, new NettyPallasRequest(httpRequest2, channel2)).isDone(), is(false));
+	}
+
+	@Test
+	public void retryMaybe() {
+		CloseableHttpAsyncClient httpClient = mock(CloseableHttpAsyncClient.class);
+		AbstractFilter filter = new RestResponseHeaderFilter();
+		filter.setValid(false);
+		SessionContext sessionContext = new SessionContext();
+		sessionContext.setBodySend(false);
+		sessionContext.setHttpCode(1);
+		Channel inBoundChannel = mock(Channel.class);
+		sessionContext.setInBoundChannel(inBoundChannel);
+		MonitorAccessLog monitorAccessLog = new MonitorAccessLog();
+		monitorAccessLog.setRequestBody("/some/path.html");
+		sessionContext.setMonitorAccessLog(monitorAccessLog);
+		sessionContext.setOspRequestBodyJson("\"foo\"");
+		HashMap<String, String> ospRequestHeader = new HashMap<String, String>();
+		ospRequestHeader.put("foo", "foo");
+		sessionContext.setOspRequestHeader(ospRequestHeader);
+		sessionContext.setPrintExceStackInfo(false);
+		FullHttpRequest httpRequest1 = mock(FullHttpRequest.class);
+		Channel channel1 = mock(Channel.class);
+		NettyPallasRequest request = new NettyPallasRequest(httpRequest1, channel1);
+		request.setCircuitBreaker(false);
+		byte[] fixContent1 = new byte[] { 1 };
+		request.setFixScrollRequestContent(fixContent1);
+		request.setIsIndexSearch(false);
+		request.setLogicClusterId("/some/path.html");
+		request.setPreference("/some/path.html");
+		request.setRoutePrimaryFirst(false);
+		request.setRouteReplicaFirst(false);
+		request.setScrollContinue(false);
+		request.setScrollFirst(false);
 		ArrayList<String> ipAndPortList1 = new ArrayList<String>();
 		ipAndPortList1.add("foo");
 		ShardGroup shardGroup1 = new ShardGroup("foo", ipAndPortList1, "Acme");
@@ -166,8 +235,8 @@ public class AsyncCallTest {
 		ArrayList<String> serverList1 = new ArrayList<String>();
 		serverList1.add("foo=bar");
 		shardGroup1.setServerList(serverList1);
-		pallasRequest.setShardGroup(shardGroup1);
-		ArrayList<ShardGroup> groupList2 = new ArrayList<ShardGroup>();
+		request.setShardGroup(shardGroup1);
+		ArrayList<ShardGroup> groupList1 = new ArrayList<ShardGroup>();
 		ArrayList<String> ipAndPortList2 = new ArrayList<String>();
 		ipAndPortList2.add("Smith");
 		ShardGroup shardGroup2 = new ShardGroup("Smith", ipAndPortList2, "Smith");
@@ -177,10 +246,84 @@ public class AsyncCallTest {
 		ArrayList<String> serverList2 = new ArrayList<String>();
 		serverList2.add("foo=bar");
 		shardGroup2.setServerList(serverList2);
-		groupList2.add(shardGroup2);
+		groupList1.add(shardGroup2);
+		request.setShardGroupList(groupList1);
+		request.setTargetGroupId(1L);
+		sessionContext.setRequest(request);
+		sessionContext.setRequestCallBack("/some/path.html");
+		sessionContext.setResponseBody(Unpooled.directBuffer());
+		HttpHeaders responseHttpHeaders = mock(HttpHeaders.class);
+		sessionContext.setResponseHttpHeaders(responseHttpHeaders);
+		sessionContext.setResponseHttpVersion(new HttpVersion("HTTP/1.1", 1, 1, false));
+		FullHttpResponse restFullHttpResponse = mock(FullHttpResponse.class);
+		sessionContext.setRestFullHttpResponse(restFullHttpResponse);
+		sessionContext.setRestRequestBody(Unpooled.directBuffer());
+		sessionContext.setRestRequestUri("/some/path.html");
+		ServiceInfo serviceInfo1 =
+			 new ServiceInfo("280 Broadway", "Acme", "John Smith", "Mr");
+		serviceInfo1.setBackendAddress("280 Broadway");
+		serviceInfo1.setClusterName("John Smith");
+		serviceInfo1.setIndexName("Acme");
+		sessionContext.setServiceInfo(serviceInfo1);
+		ArrayList<ServiceInfo> serviceInfoList = new ArrayList<ServiceInfo>();
+		ServiceInfo serviceInfo2 =
+			 new ServiceInfo("280 Broadway", "Smith", "John Smith", "Mr");
+		serviceInfo2.setBackendAddress("280 Broadway");
+		serviceInfo2.setClusterName("John Smith");
+		serviceInfo2.setIndexName("Acme");
+		serviceInfoList.add(serviceInfo2);
+		sessionContext.setServiceInfoList(serviceInfoList);
+		sessionContext.setThrowable(new PallasTimeoutException());
+		sessionContext.setTimestampClientConnected(1L);
+		sessionContext.setTimestampClientResponseRead(1L);
+		sessionContext.setTimestampClientResponseReceived(1L);
+		sessionContext.setTimestampClientStartExecute(1L);
+		sessionContext.setTimestampServerChannelRead(1L);
+		sessionContext.setTimestampServerResponseSend(1L);
+		TraceAspect TraceAspect1 = mock(TraceAspect.class);
+		sessionContext.setTraceAspect(TraceAspect1);
+		DefaultFullHttpRequest outBoundRequest =
+			 new DefaultFullHttpRequest(new HttpVersion("HTTP/1.1", 1, 1, false), new HttpMethod("GET"), "/some/path.html");
+		outBoundRequest.setDecoderResult(DecoderResult.failure(new PallasTimeoutException()));
+		HttpContext httpContext = mock(HttpContext.class);
+		FullHttpRequest httpRequest2 = mock(FullHttpRequest.class);
+		Channel channel2 = mock(Channel.class);
+		NettyPallasRequest pallasRequest =
+			 new NettyPallasRequest(httpRequest2, channel2);
+		pallasRequest.setCircuitBreaker(false);
+		byte[] fixContent2 = new byte[] { 1 };
+		pallasRequest.setFixScrollRequestContent(fixContent2);
+		pallasRequest.setIsIndexSearch(false);
+		pallasRequest.setLogicClusterId("/some/path.html");
+		pallasRequest.setPreference("/some/path.html");
+		pallasRequest.setRoutePrimaryFirst(false);
+		pallasRequest.setRouteReplicaFirst(false);
+		pallasRequest.setScrollContinue(false);
+		pallasRequest.setScrollFirst(false);
+		ArrayList<String> ipAndPortList3 = new ArrayList<String>();
+		ipAndPortList3.add("foo");
+		ShardGroup shardGroup3 = new ShardGroup("foo", ipAndPortList3, "Acme");
+		shardGroup3.setId("1234");
+		shardGroup3.setIndexName("Acme");
+		shardGroup3.setPreferNodes("foo");
+		ArrayList<String> serverList3 = new ArrayList<String>();
+		serverList3.add("foo=bar");
+		shardGroup3.setServerList(serverList3);
+		pallasRequest.setShardGroup(shardGroup3);
+		ArrayList<ShardGroup> groupList2 = new ArrayList<ShardGroup>();
+		ArrayList<String> ipAndPortList4 = new ArrayList<String>();
+		ipAndPortList4.add("Smith");
+		ShardGroup shardGroup4 = new ShardGroup("Smith", ipAndPortList4, "Smith");
+		shardGroup4.setId("1234");
+		shardGroup4.setIndexName("Acme");
+		shardGroup4.setPreferNodes("foo");
+		ArrayList<String> serverList4 = new ArrayList<String>();
+		serverList4.add("foo=bar");
+		shardGroup4.setServerList(serverList4);
+		groupList2.add(shardGroup4);
 		pallasRequest.setShardGroupList(groupList2);
 		pallasRequest.setTargetGroupId(1L);
-		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).retryMaybe(), is(-1_598_482_426_504L));
+		assertThat(new AsyncCall(httpClient, new TryPolicy(1, 1), new HttpHost("/some/path.html"), "foo", "1234", new FilterContext(filter), sessionContext, outBoundRequest, httpContext, pallasRequest).retryMaybe(), is(-1_598_521_778_682L));
 	}
 
 	@Test

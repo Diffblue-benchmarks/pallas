@@ -49,16 +49,11 @@ public class ErrorFilterTest {
 
 		// arrange
 		SessionContext sessionContext = new SessionContext();
-		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
-		Channel channel = mock(Channel.class);
-		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
 
 		// act
 		ErrorFilter.processThrowable(sessionContext, new PallasTimeoutException());
 
 		// assert
 		assertThat(sessionContext.getHttpCode(), is(500));
-		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
-		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
 	}
 }

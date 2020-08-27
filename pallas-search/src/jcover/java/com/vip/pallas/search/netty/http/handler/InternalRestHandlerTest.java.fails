@@ -3,6 +3,7 @@ package com.vip.pallas.search.netty.http.handler;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.vip.pallas.search.filter.common.SessionContext;
 import com.vip.pallas.search.netty.http.NettyPallasRequest;
@@ -10,6 +11,8 @@ import com.vip.pallas.search.netty.http.NettyPallasRequest;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
+
+import java.net.SocketAddress;
 
 import org.junit.Test;
 
@@ -50,7 +53,12 @@ public class InternalRestHandlerTest {
 		ChannelHandlerContext ctx = mock(ChannelHandlerContext.class);
 		SessionContext context = new SessionContext();
 		FullHttpRequest httpRequest2 = mock(FullHttpRequest.class);
+		SocketAddress socketAddress1 = mock(SocketAddress.class);
+		SocketAddress socketAddress2 = mock(SocketAddress.class);
 		Channel channel2 = mock(Channel.class);
+		when(channel2.remoteAddress())
+			.thenReturn(socketAddress1)
+			.thenReturn(socketAddress2);
 		context.setRequest(new NettyPallasRequest(httpRequest2, channel2));
 
 		// act

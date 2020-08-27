@@ -383,7 +383,8 @@ public class ConcurrentHashMapV8Test {
 	}
 
 	@Test
-	public void batchForBIsOneReturnsZero() {
+	public void batchFor() {
+		assertThat(new ConcurrentHashMapV8<String, String>().batchFor(9_223_372_036_854_775_807L), is(0));
 		assertThat(new ConcurrentHashMapV8<String, String>().batchFor(1L), is(0));
 	}
 
@@ -729,17 +730,7 @@ public class ConcurrentHashMapV8Test {
 	}
 
 	@Test
-	public void reduceEntriesToDouble() {
-		@SuppressWarnings("unchecked")
-		ConcurrentHashMapV8.ObjectToDouble<Map.Entry<String, String>> transformer =
-			 mock(ConcurrentHashMapV8.ObjectToDouble.class);
-		ConcurrentHashMapV8.DoubleByDoubleToDouble reducer =
-			 mock(ConcurrentHashMapV8.DoubleByDoubleToDouble.class);
-		assertThat(new ConcurrentHashMapV8<String, String>().reduceEntriesToDouble(9_223_372_036_854_775_807L, transformer, 1.0, reducer), closeTo(1.0, 0.0));
-	}
-
-	@Test
-	public void reduceEntriesToDoubleParallelismThresholdIsOne() {
+	public void reduceEntriesToDoubleBasisIsOneAndParallelismThresholdIsOneReturnsOne() {
 		@SuppressWarnings("unchecked")
 		ConcurrentHashMapV8.ObjectToDouble<Map.Entry<String, String>> transformer =
 			 mock(ConcurrentHashMapV8.ObjectToDouble.class);
