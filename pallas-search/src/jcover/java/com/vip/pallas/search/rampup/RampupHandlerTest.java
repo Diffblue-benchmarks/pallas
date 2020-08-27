@@ -2,14 +2,13 @@ package com.vip.pallas.search.rampup;
 
 import static org.mockito.Mockito.mock;
 
-import com.vip.pallas.search.utils.HttpClientUtil;
-
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.junit.Test;
 
 /**
@@ -21,9 +20,10 @@ import org.junit.Test;
 public class RampupHandlerTest {
 
 	@Test
-	public void rampupIfNecessaryIndexNameIsAcme() throws java.io.IOException, UnsupportedOperationException {
+	public void rampupIfNecessaryIndexNameIsAcme() throws CloneNotSupportedException, java.io.IOException, UnsupportedOperationException {
+		HttpRequestBase httpRequest = mock(HttpRequestBase.class);
 		HttpEntity entity = mock(HttpEntity.class);
-		RampupHandler.rampupIfNecessary(new HttpHost("/some/path.html"), "/some/path.html", new DefaultFullHttpRequest(new HttpVersion("HTTP/1.1", 1, 1, false), new HttpMethod("GET"), "/some/path.html"), HttpClientUtil.getHttpUriRequest(new HttpHost("/some/path.html"), new DefaultFullHttpRequest(new HttpVersion("/some/path.html", 1, 1, false), HttpMethod.valueOf("GET"), "/some/path.html")), entity, "Acme", "1234");
+		RampupHandler.rampupIfNecessary(new HttpHost("/some/path.html"), "/some/path.html", new DefaultFullHttpRequest(new HttpVersion("HTTP/1.1", 1, 1, false), new HttpMethod("GET"), "/some/path.html"), httpRequest, entity, "Acme", "1234");
 	}
 
 	@Test

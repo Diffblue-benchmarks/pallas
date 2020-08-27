@@ -3,9 +3,9 @@ package com.vip.pallas.search.utils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import org.junit.Test;
 
@@ -41,22 +41,24 @@ public class ByteUtilsTest {
 	}
 
 	@Test
-	public void safeRelease() {
-		ByteUtils.safeRelease(Unpooled.directBuffer());
+	public void safeRelease1() throws java.io.IOException {
+		ByteBuf buf = mock(ByteBuf.class);
+		ByteUtils.safeRelease(buf);
 	}
 
 	@Test
-	public void safeReleaseBufIsNull() {
+	public void safeRelease2() {
 		ByteUtils.safeRelease(null);
 	}
 
 	@Test
-	public void deepSafeRelease() {
-		ByteUtils.deepSafeRelease(Unpooled.directBuffer());
+	public void deepSafeRelease1() throws java.io.IOException {
+		ByteBuf buf = mock(ByteBuf.class);
+		ByteUtils.deepSafeRelease(buf);
 	}
 
 	@Test
-	public void deepSafeReleaseBufIsNull() {
+	public void deepSafeRelease2() {
 		ByteUtils.deepSafeRelease(null);
 	}
 }

@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
-import com.vip.pallas.search.exception.PallasTimeoutException;
 import com.vip.pallas.search.filter.common.SessionContext;
 import com.vip.pallas.search.netty.http.NettyPallasRequest;
 
@@ -27,33 +26,22 @@ public class ErrorFilterTest {
 	}
 
 	@Test
-	public void processThrowable1() {
+	public void processThrowable() {
 
 		// arrange
 		SessionContext sessionContext = new SessionContext();
-		sessionContext.setHttpCode(520);
 		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
 		Channel channel = mock(Channel.class);
 		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
+		Exception t = new Exception();
+		t.setStackTrace(new StackTraceElement[] { });
 
 		// act
-		ErrorFilter.processThrowable(sessionContext, new PallasTimeoutException());
-
-		// assert
-		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
-		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
-	}
-
-	@Test
-	public void processThrowable2() {
-
-		// arrange
-		SessionContext sessionContext = new SessionContext();
-
-		// act
-		ErrorFilter.processThrowable(sessionContext, new PallasTimeoutException());
+		ErrorFilter.processThrowable(sessionContext, t);
 
 		// assert
 		assertThat(sessionContext.getHttpCode(), is(500));
+		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
+		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
 	}
 }

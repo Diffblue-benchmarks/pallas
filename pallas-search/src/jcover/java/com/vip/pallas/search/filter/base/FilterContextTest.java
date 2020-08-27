@@ -1,9 +1,6 @@
 package com.vip.pallas.search.filter.base;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-
-import com.vip.pallas.search.filter.rest.RestResponseHeaderFilter;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
@@ -16,9 +13,8 @@ import org.junit.Test;
 public class FilterContextTest {
 
 	@Test
-	public void factory() {
-		AbstractFilter filter = new RestResponseHeaderFilter();
-		filter.setValid(false);
-		assertThat(new FilterContext(filter).getFilter().isValid(), is(false));
+	public void factory() throws Exception {
+		AbstractFilter filter = mock(AbstractFilter.class);
+		// pojo FilterContext
 	}
 }

@@ -2,6 +2,8 @@ package com.vip.pallas.search.netty;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -40,8 +42,11 @@ public class ByteBufManagerTest {
 	}
 
 	@Test
-	public void duplicateByteBuf() {
-		ByteBuf result = ByteBufManager.duplicateByteBuf(Unpooled.directBuffer());
+	public void duplicateByteBuf() throws java.io.IOException {
+		ByteBuf oldBuf = mock(ByteBuf.class);
+		when(oldBuf.duplicate())
+			.thenReturn(Unpooled.directBuffer());
+		ByteBuf result = ByteBufManager.duplicateByteBuf(oldBuf);
 		assertThat(result.isDirect(), is(true));
 		assertThat(result.isReadOnly(), is(false));
 		assertThat(result.isReadable(), is(false));
@@ -49,32 +54,35 @@ public class ByteBufManagerTest {
 	}
 
 	@Test
-	public void release() {
-		ByteBufManager.release(Unpooled.directBuffer());
+	public void release1() throws java.io.IOException {
+		ByteBuf buf = mock(ByteBuf.class);
+		ByteBufManager.release(buf);
 	}
 
 	@Test
-	public void releaseBufIsNull() {
+	public void release2() {
 		ByteBufManager.release(null);
 	}
 
 	@Test
-	public void deepRelease() {
-		ByteBufManager.deepRelease(Unpooled.directBuffer());
+	public void deepRelease1() throws java.io.IOException {
+		ByteBuf buf = mock(ByteBuf.class);
+		ByteBufManager.deepRelease(buf);
 	}
 
 	@Test
-	public void deepReleaseBufIsNull() {
+	public void deepRelease2() {
 		ByteBufManager.deepRelease(null);
 	}
 
 	@Test
-	public void releaseBufIsNullAndMessageIsBar() {
-		ByteBufManager.release(null, "bar");
+	public void releaseMessageIsBar1() throws java.io.IOException {
+		ByteBuf buf = mock(ByteBuf.class);
+		ByteBufManager.release(buf, "bar");
 	}
 
 	@Test
-	public void releaseMessageIsBar() {
-		ByteBufManager.release(Unpooled.directBuffer(), "bar");
+	public void releaseMessageIsBar2() {
+		ByteBufManager.release(null, "bar");
 	}
 }

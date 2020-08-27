@@ -2,6 +2,7 @@ package com.vip.pallas.search.utils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsSame.sameInstance;
+import static org.mockito.Mockito.mock;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.junit.Test;
@@ -15,10 +16,19 @@ import org.junit.Test;
 public class PallasTransportClientTest {
 
 	@Test
-	public void factory() throws NumberFormatException, java.net.UnknownHostException {
+	public void factory1() {
 		PallasTransportClient pallasTransportClient =
-			 new PallasTransportClient("John Smith", "280 Broadway");
-		TransportClient transportClient = ElasticRestClient.buildNative(",");
+			 new PallasTransportClient("John Smith", ",");
+		TransportClient transportClient = mock(TransportClient.class);
+		pallasTransportClient.setTransportClient(transportClient);
+		assertThat(pallasTransportClient.getTransportClient(), sameInstance(transportClient));
+	}
+
+	@Test
+	public void factory2() {
+		PallasTransportClient pallasTransportClient =
+			 new PallasTransportClient("John Smith", "bar");
+		TransportClient transportClient = mock(TransportClient.class);
 		pallasTransportClient.setTransportClient(transportClient);
 		assertThat(pallasTransportClient.getTransportClient(), sameInstance(transportClient));
 	}

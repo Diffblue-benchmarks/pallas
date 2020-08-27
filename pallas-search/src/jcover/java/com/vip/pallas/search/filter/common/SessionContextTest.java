@@ -1,14 +1,15 @@
 package com.vip.pallas.search.filter.common;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsSame.sameInstance;
+import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.mock;
 
-import com.vip.pallas.search.exception.PallasTimeoutException;
 import com.vip.pallas.search.model.ServiceInfo;
+import com.vip.pallas.search.model.ShardGroup;
 import com.vip.pallas.search.monitor.MonitorAccessLog;
 import com.vip.pallas.search.netty.http.NettyPallasRequest;
 import com.vip.pallas.search.trace.TraceAspect;
@@ -34,7 +35,7 @@ import org.junit.Test;
 public class SessionContextTest {
 
 	@Test
-	public void factory() {
+	public void factory() throws java.io.IOException {
 		SessionContext sessionContext = new SessionContext();
 		sessionContext.setBodySend(false);
 		sessionContext.setHttpCode(1);
@@ -48,9 +49,45 @@ public class SessionContextTest {
 		ospRequestHeader.put("foo", "foo");
 		sessionContext.setOspRequestHeader(ospRequestHeader);
 		sessionContext.setPrintExceStackInfo(false);
-		sessionContext.setRequest(null);
+		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
+		Channel channel = mock(Channel.class);
+		NettyPallasRequest request = new NettyPallasRequest(httpRequest, channel);
+		request.setCircuitBreaker(false);
+		byte[] fixContent = new byte[] { 1 };
+		request.setFixScrollRequestContent(fixContent);
+		request.setIsIndexSearch(false);
+		request.setLogicClusterId("/some/path.html");
+		request.setPreference("/some/path.html");
+		request.setRoutePrimaryFirst(false);
+		request.setRouteReplicaFirst(false);
+		request.setScrollContinue(false);
+		request.setScrollFirst(false);
+		ArrayList<String> ipAndPortList1 = new ArrayList<String>();
+		ipAndPortList1.add("foo");
+		ShardGroup shardGroup1 = new ShardGroup("foo", ipAndPortList1, "Acme");
+		shardGroup1.setId("1234");
+		shardGroup1.setIndexName("Acme");
+		shardGroup1.setPreferNodes("foo");
+		ArrayList<String> serverList1 = new ArrayList<String>();
+		serverList1.add("foo=bar");
+		shardGroup1.setServerList(serverList1);
+		request.setShardGroup(shardGroup1);
+		ArrayList<ShardGroup> groupList = new ArrayList<ShardGroup>();
+		ArrayList<String> ipAndPortList2 = new ArrayList<String>();
+		ipAndPortList2.add("Smith");
+		ShardGroup shardGroup2 = new ShardGroup("Smith", ipAndPortList2, "Smith");
+		shardGroup2.setId("1234");
+		shardGroup2.setIndexName("Acme");
+		shardGroup2.setPreferNodes("foo");
+		ArrayList<String> serverList2 = new ArrayList<String>();
+		serverList2.add("foo=bar");
+		shardGroup2.setServerList(serverList2);
+		groupList.add(shardGroup2);
+		request.setShardGroupList(groupList);
+		request.setTargetGroupId(1L);
+		sessionContext.setRequest(request);
 		sessionContext.setRequestCallBack("/some/path.html");
-		ByteBuf responseBody = io.netty.buffer.Unpooled.directBuffer();
+		ByteBuf responseBody = mock(ByteBuf.class);
 		sessionContext.setResponseBody(responseBody);
 		HttpHeaders responseHttpHeaders = mock(HttpHeaders.class);
 		sessionContext.setResponseHttpHeaders(responseHttpHeaders);
@@ -58,7 +95,7 @@ public class SessionContextTest {
 		sessionContext.setResponseHttpVersion(responseHttpVersion);
 		FullHttpResponse restFullHttpResponse = mock(FullHttpResponse.class);
 		sessionContext.setRestFullHttpResponse(restFullHttpResponse);
-		ByteBuf restRequestBody = io.netty.buffer.Unpooled.directBuffer();
+		ByteBuf restRequestBody = mock(ByteBuf.class);
 		sessionContext.setRestRequestBody(restRequestBody);
 		sessionContext.setRestRequestUri("/some/path.html");
 		ServiceInfo serviceInfo1 =
@@ -75,7 +112,9 @@ public class SessionContextTest {
 		serviceInfo2.setIndexName("Acme");
 		serviceInfoList.add(serviceInfo2);
 		sessionContext.setServiceInfoList(serviceInfoList);
-		sessionContext.setThrowable(new PallasTimeoutException());
+		Exception throwable = new Exception();
+		throwable.setStackTrace(new StackTraceElement[] { });
+		sessionContext.setThrowable(throwable);
 		sessionContext.setTimestampClientConnected(1L);
 		sessionContext.setTimestampClientResponseRead(1L);
 		sessionContext.setTimestampClientResponseReceived(1L);
@@ -89,7 +128,20 @@ public class SessionContextTest {
 		assertThat(sessionContext.getMonitorAccessLog(), sameInstance(monitorAccessLog));
 		assertThat(sessionContext.getOspRequestBodyJson(), is("\"foo\""));
 		assertThat(sessionContext.getPrintExceStackInfo(), is(false));
-		assertThat(sessionContext.getRequest(), is(nullValue()));
+		assertArrayEquals(new byte[] { 1 }, sessionContext.getRequest().getFixScrollRequestContent());
+		assertThat(sessionContext.getRequest().getLogicClusterId(), is("/some/path.html"));
+		assertThat(sessionContext.getRequest().getNewHeaderNames(), empty());
+		assertThat(sessionContext.getRequest().getPreference(), is("/some/path.html"));
+		assertThat(sessionContext.getRequest().getShardGroup(), sameInstance(shardGroup1));
+		assertThat(sessionContext.getRequest().getShardGroupList().size(), is(1));
+		assertThat(sessionContext.getRequest().getShardGroupList().get(0), sameInstance(shardGroup2));
+		assertThat(sessionContext.getRequest().getTargetGroupId(), is(1L));
+		assertThat(sessionContext.getRequest().isCircuitBreakerOn(), is(false));
+		assertThat(sessionContext.getRequest().isIndexSearch(), is(false));
+		assertThat(sessionContext.getRequest().isRoutePrimaryFirst(), is(false));
+		assertThat(sessionContext.getRequest().isRouteReplicaFirst(), is(false));
+		assertThat(sessionContext.getRequest().isScrollContinue(), is(false));
+		assertThat(sessionContext.getRequest().isScrollFirst(), is(false));
 		assertThat(sessionContext.getRequestCallBack(), is("/some/path.html"));
 		assertThat(sessionContext.getResponseBody(), sameInstance(responseBody));
 		assertThat(sessionContext.getResponseHttpVersion(), sameInstance(responseHttpVersion));
@@ -109,52 +161,5 @@ public class SessionContextTest {
 		assertThat(sessionContext.getTimestampServerResponseSend(), is(1L));
 		assertThat(sessionContext.getTraceAspect(), sameInstance(TraceAspect1));
 		assertThat(sessionContext.isBodySend(), is(false));
-	}
-
-	@Test
-	public void getOspRequestHeader() {
-		SessionContext sessionContext = new SessionContext();
-		sessionContext.setHttpCode(1);
-		HashMap<String, String> ospRequestHeader = new HashMap<String, String>();
-		sessionContext.setOspRequestHeader(ospRequestHeader);
-		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
-		Channel channel = mock(Channel.class);
-		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
-		assertThat(sessionContext.getOspRequestHeader(), instanceOf(HashMap.class));
-		assertThat((HashMap<String, String>) sessionContext.getOspRequestHeader(), sameInstance(ospRequestHeader));
-		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
-		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
-	}
-
-	@Test
-	public void getResponseHttpHeaders() {
-		SessionContext sessionContext = new SessionContext();
-		sessionContext.setHttpCode(1);
-		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
-		Channel channel = mock(Channel.class);
-		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
-		HttpHeaders responseHttpHeaders = mock(HttpHeaders.class);
-		sessionContext.setResponseHttpHeaders(responseHttpHeaders);
-		assertThat(sessionContext.getResponseHttpHeaders(), sameInstance(responseHttpHeaders));
-		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
-		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
-	}
-
-	@Test
-	public void getFormatTimestampStatsStr() {
-		SessionContext sessionContext = new SessionContext();
-		sessionContext.setHttpCode(1);
-		FullHttpRequest httpRequest = mock(FullHttpRequest.class);
-		Channel channel = mock(Channel.class);
-		sessionContext.setRequest(new NettyPallasRequest(httpRequest, channel));
-		sessionContext.setTimestampClientConnected(1L);
-		sessionContext.setTimestampClientResponseRead(1L);
-		sessionContext.setTimestampClientResponseReceived(1L);
-		sessionContext.setTimestampClientStartExecute(1L);
-		sessionContext.setTimestampServerChannelRead(1L);
-		sessionContext.setTimestampServerResponseSend(1L);
-		assertThat(sessionContext.getFormatTimestampStatsStr(), is("sr=1,cs1=1,cs2=1,cr1=1,cr2=1,ss=1"));
-		assertThat(sessionContext.getRequest().getCookieMap().isEmpty(), is(true));
-		assertThat(sessionContext.getRequest().getParameterMap().isEmpty(), is(true));
 	}
 }

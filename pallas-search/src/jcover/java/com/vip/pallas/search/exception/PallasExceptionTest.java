@@ -37,8 +37,10 @@ public class PallasExceptionTest {
 
 	@Test
 	public void factory3() {
+		Exception cause = new Exception();
+		cause.setStackTrace(new StackTraceElement[] { });
 		PallasException pallasException =
-			 new PallasException("an error has happened", "DE", new PallasTimeoutException());
+			 new PallasException("an error has happened", "DE", cause);
 		pallasException.setErrorCode("DE");
 		pallasException.setMessage("an error has happened");
 		assertThat(pallasException.getErrorCode(), is("DE"));
@@ -49,8 +51,9 @@ public class PallasExceptionTest {
 
 	@Test
 	public void factory4() {
-		PallasException pallasException =
-			 new PallasException("DE", new PallasTimeoutException());
+		Exception cause = new Exception();
+		cause.setStackTrace(new StackTraceElement[] { });
+		PallasException pallasException = new PallasException("DE", cause);
 		pallasException.setErrorCode("DE");
 		pallasException.setMessage("an error has happened");
 		assertThat(pallasException.getErrorCode(), is("DE"));

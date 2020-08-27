@@ -48,7 +48,7 @@ public class PallasHttpContentCompressorTest {
 
 		// assert
 		assertThat(out.size(), is(2));
-		// pojo HttpObject.251293277
+		// pojo HttpObject.829502376
 	}
 
 	@Test
